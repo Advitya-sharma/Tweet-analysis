@@ -3,7 +3,12 @@ import sys,tweepy
 import matplotlib.pyplot as plt
 import pandas as pd
 import re
-from wordcloud import WordCloud
+import nltk
+from nltk.corpus import stopwords
+from wordcloud import WordCloud,STOPWORDS 
+import seaborn as sns
+
+
 
 consumerKey = "XOxzythWu8hHzvnIapml2XH9O"
 consumerSecret = "LR6DA85OwtFfCYeJpMxJV4SsO5ZIhjvYeZQedgHG4isrccSp6J"
@@ -16,7 +21,7 @@ auth.set_access_token(accessToken,accesssecret)
 api = tweepy.API(auth)
 
 
-tweet = tweepy.Cursor(api.search, q="#coronavirus",tweet_mode="extended",lang = "en",count=200,include_rts=False).items(100)
+tweet = tweepy.Cursor(api.search, q="lpuuniversity",tweet_mode="extended",lang = "en",count=200,include_rts=False).items(100)
 
 df = pd.DataFrame([tweet.full_text for tweet in tweet],columns=['Tweets'])
 
@@ -32,10 +37,12 @@ def cleantext(text):
 
 df['Tweets'] = df['Tweets'].apply(cleantext)
 
+stopwords = set(STOPWORDS) 
+
 allwords = ' '.join([tweets for tweets in df['Tweets']])
 
-wordcloud = WordCloud(width=500,height=300,max_font_size=112).generate(allwords)
-
+plt.title("Wordcloud for 100 latest tweets")
+wordcloud = WordCloud(width=500,height=300,max_font_size=112,stopwords = stopwords).generate(allwords)
 plt.imshow(wordcloud)
 plt.show()
 
@@ -56,13 +63,12 @@ def getAnalysis(score):
 
 df['Analysis'] = df["Polarity"].apply(getAnalysis)
 
+plt.title("Sentiment Analysis")
+
 print(df.head())
 
-fig = plt.figure()
-ax = fig.add_axes([0,0,1,1])
+plt.style.use('ggplot')
 
-ax.hist(df["Analysis"])
-
+df["Analysis"].value_counts().plot(kind='bar')
+plt.xticks(rotation='horizontal')
 plt.show()
-
-print(df["Analysis"].value_counts())
