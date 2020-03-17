@@ -10,11 +10,11 @@ import seaborn as sns
 
 
 
-consumerKey = "gg"
-consumerSecret = "gg"
+consumerKey = "" #enter your consumerKey
+consumerSecret = "" #enter your consumerSecret
 
-accessToken = "1192097781667651585-"
-accesssecret = "GPgxpjF4YHJVxMjAHXb5"
+accessToken = "" #enter your accessToken
+accesssecret = "" #enter your accesssecret
 
 auth = tweepy.OAuthHandler(consumer_key=consumerKey,consumer_secret=consumerSecret)
 auth.set_access_token(accessToken,accesssecret) 
